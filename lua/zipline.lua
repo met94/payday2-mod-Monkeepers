@@ -1,8 +1,12 @@
 local key = ModPath .. '	' .. RequiredScript
 if _G[key] then return else _G[key] = true end
 
+local function mkp_is_bag_capable_zipline(zipline)
+	return zipline:is_usage_type_bag() or (zipline.is_usage_type_both and zipline:is_usage_type_both())
+end
+
 function ZipLine:mkp_update_zipline(force_remove)
-	if force_remove or not self:is_usage_type_bag() then
+	if force_remove or not mkp_is_bag_capable_zipline(self) then
 		table.delete(Monkeepers.ziplines, self)
 	else
 		table.insert(Monkeepers.ziplines, self)
@@ -29,7 +33,7 @@ function ZipLine:_check_interaction_active_state()
 		managers.groupai:state():remove_special_objective(self.mkp_so_id)
 	end
 
-	if Keepers and self:is_usage_type_bag() and not self:is_interact_blocked() then
+	if Keepers and mkp_is_bag_capable_zipline(self) and not self:is_interact_blocked() then
 		local tracker = managers.navigation:create_nav_tracker(self._unit:interaction():interact_position(), true)
 		local pos = tracker:field_position()
 		managers.navigation:destroy_nav_tracker(tracker)

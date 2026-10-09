@@ -356,7 +356,9 @@ function Monkeepers:is_dropzone_ready(dropzone, position)
 	if not dropzone or type(dropzone) ~= 'table' then
 		-- qued
 	elseif type(dropzone.sync_store_loot_in_vehicle) == 'function' then
-		if alive(dropzone._unit) and dropzone:is_interaction_enabled(VehicleDrivingExt.INTERACT_LOOT) then
+		if type(dropzone.is_accepting_loot_enabled) == 'function' and not dropzone:is_accepting_loot_enabled() then
+			-- qued
+		elseif alive(dropzone._unit) and dropzone:is_interaction_enabled(VehicleDrivingExt.INTERACT_LOOT) then
 			if not dropzone._tweak_data or #dropzone._loot < dropzone._tweak_data.max_loot_bags then
 				return not position or mvec3_dis(position, dropzone._unit:position()) < 20
 			end
@@ -422,7 +424,7 @@ end
 
 function Monkeepers:bag_zipline_near_pos(pos)
 	for _, zipline in ipairs(self.ziplines) do
-		if zipline._enabled and zipline._usage_type == 'bag' then
+		if zipline._enabled and (zipline:is_usage_type_bag() or (zipline.is_usage_type_both and zipline:is_usage_type_both())) then
 			if mvec3_dis(pos, zipline._start_pos) < self.radius_zipline_zone then
 				return true
 			end
@@ -958,6 +960,26 @@ end
 function Monkeepers:get_dropzone_filters(dropzone)
 	if type(dropzone) ~= 'table' then
 		return
+	end
+
+	if type(dropzone.sync_store_loot_in_vehicle) == 'function' then
+		-- vehicle: mirror VehicleDrivingExt:_loot_filter_func per carry_id
+		local vehicle = dropzone
+		return setmetatable({}, {
+			__index = function(_, carry_id)
+				local allowed = vehicle._loot_filter and vehicle._loot_filter[carry_id]
+				if allowed then
+					return allowed
+				end
+
+				if vehicle._tweak_data and vehicle._tweak_data.allow_only_filtered then
+					return false
+				end
+
+				local carry_tweak = tweak_data.carry[carry_id]
+				return (carry_tweak and (carry_tweak.is_unique_loot or carry_tweak.bag_value)) or false
+			end
+		})
 	end
 
 	local results
