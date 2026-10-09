@@ -424,7 +424,7 @@ end
 
 function Monkeepers:bag_zipline_near_pos(pos)
 	for _, zipline in ipairs(self.ziplines) do
-		if zipline._enabled and zipline._usage_type == 'bag' then
+		if zipline._enabled and (zipline:is_usage_type_bag() or (zipline.is_usage_type_both and zipline:is_usage_type_both())) then
 			if mvec3_dis(pos, zipline._start_pos) < self.radius_zipline_zone then
 				return true
 			end
@@ -968,7 +968,7 @@ function Monkeepers:get_dropzone_filters(dropzone)
 		return setmetatable({}, {
 			__index = function(_, carry_id)
 				local allowed = vehicle._loot_filter and vehicle._loot_filter[carry_id]
-				if allowed ~= nil then
+				if allowed then
 					return allowed
 				end
 
