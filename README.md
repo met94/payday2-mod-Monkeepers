@@ -41,13 +41,13 @@ they can take the job.
 - Per-level bag behaviour: **None**, **Same bag contents**, **Same bag weight**
   (default) or **All**.
 - Bots catch bags thrown at them, with a toggle to disable it.
-- Bots use bag-capable ziplines, including the person-and-bag `"both"` type.
+- With Keepers installed, bots use bag-capable ziplines, including the
+  person-and-bag `"both"` type, and pick bags up from shelves.
 - Vehicle delivery follows 248.2 rules: a vehicle that is not accepting loot is
   ignored, and each vehicle's allowed bag list / unique-loot and bag-value rules
   are respected.
 - Host keybind deletes all routes and cancels outstanding carry objectives.
-- Keepers integration: put-back-in-place orders, custom waypoints and the full
-  loot workflow.
+- Keepers integration: put-back-in-place orders and the full loot workflow.
 
 See [MENU_OPTIONS.md](MENU_OPTIONS.md) for the options and per-level modes.
 
@@ -55,8 +55,9 @@ See [MENU_OPTIONS.md](MENU_OPTIONS.md) for the options and per-level modes.
 
 - PAYDAY 2 248.2, 64-bit.
 - [SuperBLT](https://superblt.znix.xyz/).
-- Keepers is optional but recommended: without it bots cannot be ordered in
-  stealth and Keepers' loot/put-back orders do not start routes.
+- Keepers is optional but recommended. Without it, bots cannot be ordered in
+  stealth, put-back orders do not exist, and shelf/zipline transport is
+  unavailable; basic pickup-to-drop routes still work.
 
 ## Installation
 
@@ -106,9 +107,10 @@ Monkeepers hooks 12 game files: mission elements, player and route manager,
 bag/carry data, cop logic, team AI movement/idle, ziplines and vehicles.
 
 Keepers is the intended companion. Keep Monkeepers at priority **100** and
-Keepers at its default **0**: BLT loads Monkeepers first, and swapping the order
-breaks the shared `MissionScript._create_elements` and
-`TeamAILogicIdle.action_complete_clbk` wrappers.
+Keepers at its default **0**. Both mods wrap `MissionScript._create_elements`
+and chain correctly, but `TeamAILogicIdle.action_complete_clbk` is a full
+override here that Keepers wraps, so the tested and supported order is
+Monkeepers first.
 
 Settings are saved to `...\PAYDAY 2\mods\saves\monkeepers.txt`; only per-level
 behaviours that differ from the default are stored.

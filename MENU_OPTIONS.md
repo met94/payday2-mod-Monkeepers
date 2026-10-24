@@ -13,8 +13,8 @@ only to that level:
 | Mode | Behaviour |
 | --- | --- |
 | **None** | Bots ignore loot bags on this heist. |
-| **Same bag contents** | Routes only carry bags of the same type the player picked up (useful on maps with mixed loot, e.g. Lab Rats). |
-| **Same bag weight** | Routes only carry bags with the same throw distance; gold does not use routes made for money. This is the default. |
+| **Same bag contents** | Routes only carry bags of the same type the player picked up (useful on maps with mixed loot, e.g. Lab Rats). This is the default on Framing Frame day 2 and The Nail. |
+| **Same bag weight** | Routes only carry bags with the same throw distance; gold does not use routes made for money. This is the default on most heists. |
 | **All** | Routes carry any bag type. |
 
 Pick the mode with left/right. The selection is saved when you leave the menu.
@@ -42,9 +42,12 @@ routes.
    where you took the bag and where it landed.
 3. Any bag within 6 m of the source point is routed to the destination.
 4. The route disappears after 90 seconds without a bag near the source.
+   Routes that end at a dropzone (vehicle or loot drop) do not expire this way;
+   they stay until used or deleted.
 
 You do not need to configure routes manually; Keepers' put-back-in-place order
-and custom waypoints feed the same system.
+feeds the same system.
 
-In stealth, wake bots first with Keepers (secondary "Stop AI" control) so they
-can start carrying.
+Keepers is also required for shelf pickups and zipline transport, and for waking
+bots in stealth (secondary "Stop AI" control) so they can start carrying.
+Basic pickup-to-drop routes work without Keepers.
