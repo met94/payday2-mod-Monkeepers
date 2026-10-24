@@ -1,3 +1,10 @@
+Revision 87.1:
+- fixed bots not using ziplines whose usage type is "both" (person and bag)
+- fixed routing bags to vehicles that are not accepting loot
+- fixed vehicle dropzone filters to follow the 248.2 carry filter (allow-only-filtered, unique loot and bag value)
+- auto-updates now come from this fork's GitHub releases instead of the upstream feed
+Player notes: bots now use person-and-bag ziplines, no longer carry bags to vehicles that reject them, and respect each vehicle's allowed bag types. Everything else plays as before.
+
 Revision 87:
 - fixed r86
 
